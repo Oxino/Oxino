@@ -1,4 +1,4 @@
-generate_energia_firmware(Blink
+generate_energia_firmware(Timers_Blink
     SKETCH Timers_Blink.ino
     LIBS Oxino
     BOARD lpcc3200

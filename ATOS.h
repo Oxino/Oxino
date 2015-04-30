@@ -4,7 +4,7 @@
 #define ATOS_VERSION 001
 
 #include "Arduino.h"
-#include "../Timers/Timers.h"
+#include "Timers.h"
 
 #if !defined (__CC3200R1M1RGC__)
 #error Sorry, this MCU is only support CC3200 for now!

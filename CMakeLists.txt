@@ -7,15 +7,9 @@ project(Oxino)
 set(CMAKE_VERBOSE_MAKEFILE on)
 
 file(GLOB INC_FILES
-    src/LinkedList/*.h
-    src/Timers/*.h
-    src/ATOS/*.h
     *.h)
 
 file(GLOB SRC_FILES
-    src/LinkedList/*.cpp
-    src/Timers/*.cpp
-    src/ATOS/*.cpp
     *.cpp)
 
 generate_energia_library(Oxino
