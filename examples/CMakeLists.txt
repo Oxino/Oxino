@@ -1,0 +1,5 @@
+add_subdirectory(ATOS_2Tasks)
+add_subdirectory(ATOS_SerialTask)
+add_subdirectory(Timers_Blink)
+add_subdirectory(LinkedList_ClassList)
+add_subdirectory(LinkedList_SimpleIntegerList)
