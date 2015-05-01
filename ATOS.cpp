@@ -151,7 +151,7 @@ void ATOS::begin(HardwareTimer &timer, uint16_t timeout) {
     }
 }
 
-void ATOS::reboot() {
+void ATOS::reset() {
     _reboot();
 }
 

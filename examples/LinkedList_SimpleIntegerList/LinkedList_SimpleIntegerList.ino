@@ -8,7 +8,7 @@
 	Edited by:
 		Ivan Seidel, github.com/ivanseidel
 */
-#include <LinkedList.h>
+#include <Oxino.h>
 
 LinkedList<int> myList = LinkedList<int>();
 

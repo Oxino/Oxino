@@ -9,7 +9,7 @@
 		Ivan Seidel, github.com/ivanseidel
 */
 
-#include <LinkedList.h>
+#include <Oxino.h>
 
 // Let's define a new class
 class Animal {

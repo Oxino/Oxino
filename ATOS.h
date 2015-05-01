@@ -63,7 +63,7 @@ public:
 
     int start();
 
-    void reboot();
+    void reset();
 
 private:
     int findTask(P_TOS_TASK_FN fn);
