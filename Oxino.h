@@ -10,6 +10,7 @@
 #include "Button.h"
 #include "LinkedList.h"
 #include "Timers.h"
+#include "Watchdog.h"
 #include "ATOS.h"
 
 #endif //OXINO_H

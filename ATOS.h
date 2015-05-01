@@ -45,9 +45,9 @@ private:
 
 class ATOS {
 public:
-    void begin(uint16_t resetTimeout = 0);
+    void begin(uint16_t timeout = 0);
 
-    void begin(HardwareTimer &timer, uint16_t resetTimeout = 0);
+    void begin(HardwareTimer &timer, uint16_t timeout = 0);
 
     int createTask(P_TOS_TASK_FN fn);
 
@@ -63,7 +63,7 @@ public:
 
     int start();
 
-    void reset();
+    void reboot();
 
 private:
     int findTask(P_TOS_TASK_FN fn);

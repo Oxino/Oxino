@@ -1,6 +1,10 @@
 add_subdirectory(ATOS_2Tasks)
 add_subdirectory(ATOS_SerialTask)
+add_subdirectory(ATOS_Reset)
+add_subdirectory(ATOS_ResetAfterTimeout)
 add_subdirectory(Timers_Blink)
 add_subdirectory(LinkedList_ClassList)
 add_subdirectory(LinkedList_SimpleIntegerList)
 add_subdirectory(Button_LongPressed)
+
+add_subdirectory(Watchdog_Reboot)

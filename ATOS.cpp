@@ -4,26 +4,25 @@
 
 
 #include "ATOS.h"
+#include "Watchdog.h"
 
 #ifdef __CC3200R1M1RGC__
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
-
 #endif
 
 const uint8_t MAX_TASKS = 9; //max allowed g_tasks -1 (i.e.: 9 = 10-1)
 
 static HardwareTimer *_timer = NULL;
 
-volatile uint16_t _reset_timeout;
-volatile unsigned long _isr_time;
+volatile uint16_t _timeout;
 static bool _initialized = false;
 TaskEntry g_tasks[MAX_TASKS];
 static TaskEntry *g_current_task;
 static uint16_t _num_task = 0;
 
 
-void reset() {
+void _reboot() {
 #ifdef __CC3200R1M1RGC__
     if (_timer) _timer->stop();
 
@@ -96,15 +95,6 @@ void isr() {
     int i;
     int iRet;
 
-    if (_reset_timeout) {
-        if (_isr_time && (_isr_time + _reset_timeout) < millis()) { // timeout and reset
-            reset();
-        }
-    }
-
-
-    _isr_time = millis();
-
     //
     // Loop through every task
     //
@@ -141,23 +131,28 @@ void isr() {
         }
     }
 
-    _isr_time = 0;
+    if (_timeout > 1) {
+        Watchdog.reset();
+    }
 }
 
-void ATOS::begin(uint16_t resetTimeout) {
-    begin(Timer3, resetTimeout);
+void ATOS::begin(uint16_t timeout) {
+    begin(Timer3, timeout);
 }
 
-void ATOS::begin(HardwareTimer &timer, uint16_t resetTimeout) {
+void ATOS::begin(HardwareTimer &timer, uint16_t timeout) {
     _initialized = true;
     _timer = &timer;
-    _timer->init(1000);
+    _timer->init(1000); // 1 ms
     _timer->attachInterrupt(isr);
-    _reset_timeout = resetTimeout;
+    _timeout = timeout;
+    if (_timeout > 1) {
+        Watchdog.enable(timeout);
+    }
 }
 
-void ATOS::reset() {
-    // TODO
+void ATOS::reboot() {
+    _reboot();
 }
 
 int ATOS::findTask(P_TOS_TASK_FN fn) {

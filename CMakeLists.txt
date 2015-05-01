@@ -7,9 +7,11 @@ project(Oxino)
 set(CMAKE_VERBOSE_MAKEFILE on)
 
 file(GLOB INC_FILES
+    utility/*.h
     *.h)
 
 file(GLOB SRC_FILES
+    utility/*.cpp
     *.cpp)
 
 generate_energia_library(Oxino

@@ -1,7 +1,6 @@
 file(GLOB SRC_FILES *.h *.cpp)
 
-generate_energia_firmware(ATOS_2Tasks
-    SKETCH ATOS_2Tasks.ino
+generate_energia_firmware(Watchdog_Reboot
     SRCS ${SRC_FILES}
     LIBS Oxino
     BOARD lpcc3200
