@@ -145,7 +145,7 @@ void isr() {
 }
 
 void ATOS::begin(uint16_t resetTimeout) {
-    begin(Timer0, resetTimeout);
+    begin(Timer3, resetTimeout);
 }
 
 void ATOS::begin(HardwareTimer &timer, uint16_t resetTimeout) {

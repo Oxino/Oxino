@@ -26,7 +26,7 @@ Button myBtn(BUTTON_PIN, INVERT, PULLUP);    //Declare the button
 enum {
 	ONOFF, TO_BLINK, BLINK, TO_ONOFF
 };
-uint8_t STATE;                   //The current state machine state
+uint8_t STATE = ONOFF;                   //The current state machine state
 boolean ledState;                //The current LED status
 unsigned long ms;                //The current time from millis()
 unsigned long msLast;            //The last time the LED was switched

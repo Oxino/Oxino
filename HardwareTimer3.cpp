@@ -95,7 +95,7 @@ void _t3_enable() {
 
 #ifdef __CC3200R1M1RGC__
 	MAP_TimerIntRegister(TIMERA3_BASE, TIMER_BOTH, __t3_timer_handler);
-	MAP_IntPrioritySet(INT_TIMERA0A, INT_PRIORITY_LVL_1);
+	MAP_IntPrioritySet(INT_TIMERA3A, INT_PRIORITY_LVL_1);
 	MAP_TimerIntEnable(TIMERA3_BASE, TIMER_TIMA_TIMEOUT | TIMER_TIMB_TIMEOUT);
 #else
 			TIMSK3 = _BV(TOIE3);

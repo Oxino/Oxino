@@ -24,6 +24,10 @@ Button BTN(BTN_BUILTIN);
  *  pullup could be used.)                                              		*
  *--------------------------------------------------------------------------*/
 Button::Button(uint8_t pin, bool invert, bool internalPullup) {
+	begin(pin, invert, internalPullup);
+}
+
+void Button::begin(uint8_t pin, bool invert, bool internalPullup) {
 	_pin = pin;
 	_internalPullup = internalPullup;
 	_invert = invert;

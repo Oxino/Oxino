@@ -14,7 +14,9 @@
 
 class Button {
 public:
+	Button() {}
 	Button(uint8_t pin, bool invert = false, bool internalPullup = false);
+	void begin(uint8_t pin, bool invert = false, bool internalPullup = false);
 	uint8_t read();
 	uint8_t update();
 	void reset();

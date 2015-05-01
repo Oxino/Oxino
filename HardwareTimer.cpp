@@ -7,7 +7,7 @@
 
 #include "HardwareTimer.h"
 
-void HardwareTimer::init(long us) {
+void HardwareTimer::init(unsigned long us) {
     _callbacks.init();
     setPeriod(us);
 }

@@ -56,7 +56,7 @@ public:
     HardwareTimer(hwt_callbacks &callbacks) : _callbacks(callbacks), _isr(0) {
     }
 
-    void init(long us = 1000000);
+    void init(unsigned long us = 1000000);
 
     void start();
 
