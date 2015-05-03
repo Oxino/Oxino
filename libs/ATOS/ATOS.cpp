@@ -8,7 +8,6 @@
 #ifdef __CC3200R1M1RGC__
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
-#include <WiFi/utility/device.h>
 #include <IntervalTimer.h>
 
 #endif
