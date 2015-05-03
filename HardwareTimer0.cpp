@@ -4,8 +4,8 @@
 
 #ifdef __CC3200R1M1RGC__
 
+#include "utility/timer_if.h"
 #include <driverlib/timer.h>
-#include <inc/hw_ints.h>
 #include <driverlib/prcm.h>
 
 #endif
@@ -15,18 +15,17 @@ long _t0_cyc;
 int _t0_sca;
 
 #ifdef __CC3200R1M1RGC__
-unsigned long _t0_ticks;
+unsigned long _t0_us;
 #endif
 
 #ifdef __CC3200R1M1RGC__
 
 void __t0_timer_handler(void) {
-    unsigned long ulInts;
-    ulInts = MAP_TimerIntStatus(TIMERA0_BASE, 1);
     //
     // Clear the timer interrupt.
     //
-    MAP_TimerIntClear(TIMERA0_BASE, ulInts);
+    Timer_IF_InterruptClear(TIMERA0_BASE);
+
     Timer0.isr();
 }
 
@@ -39,13 +38,8 @@ ISR(TIMER0_OVF_vect) {
 
 void _t0_init() {
 #ifdef __CC3200R1M1RGC__
-    MAP_IntMasterEnable();
-    MAP_IntEnable(FAULT_SYSTICK);
-    PRCMCC3200MCUInit();
-    MAP_PRCMPeripheralClkEnable(PRCM_TIMERA0, PRCM_RUN_MODE_CLK);
-    MAP_PRCMPeripheralReset(PRCM_TIMERA0);
-    MAP_TimerConfigure(TIMERA0_BASE, TIMER_CFG_PERIODIC);
-    MAP_TimerPrescaleSet(TIMERA0_BASE, TIMER_BOTH, 0);
+//    MAP_IntEnable(FAULT_SYSTICK);
+    Timer_IF_Init(PRCM_TIMERA0, TIMERA0_BASE, TIMER_CFG_PERIODIC, TIMER_BOTH, 0);
 #endif
 
 }
@@ -54,35 +48,28 @@ void _t0_start() ;
 
 long _t0_period(long us) {
 #ifdef __CC3200R1M1RGC__
-    _t0_ticks = US_TO_TICKS(us);
-    _t0_start();
+    _t0_us = (unsigned long) us;
+    Timer_IF_ReLoad(TIMERA0_BASE, TIMER_BOTH, _t0_us);
 #endif
 }
 
 void _t0_enable() {
 #ifdef __CC3200R1M1RGC__
-    MAP_TimerIntRegister(TIMERA0_BASE, TIMER_BOTH, __t0_timer_handler);
-    MAP_IntPrioritySet(INT_TIMERA0A, INT_PRIORITY_LVL_1);
-    MAP_TimerIntEnable(TIMERA0_BASE, TIMER_TIMA_TIMEOUT | TIMER_TIMB_TIMEOUT);
+    Timer_IF_IntSetup(TIMERA0_BASE, TIMER_BOTH, __t0_timer_handler);
 #endif
 
 }
 
 void _t0_disable() {
 #ifdef __CC3200R1M1RGC__
-    MAP_TimerIntDisable(TIMERA0_BASE, TIMER_BOTH);
-    //
-    // Unregister the timer interrupt
-    //
-    MAP_TimerIntUnregister(TIMERA0_BASE, TIMER_BOTH);
+    Timer_IF_DeInit(TIMERA0_BASE, TIMER_BOTH);
 #endif
 
 }
 
 void _t0_start() {
 #ifdef __CC3200R1M1RGC__
-    MAP_TimerLoadSet(TIMERA0_BASE, TIMER_BOTH, _t0_ticks);
-    MAP_TimerEnable(TIMERA0_BASE, TIMER_BOTH);
+    Timer_IF_Start(TIMERA0_BASE, TIMER_BOTH, _t0_us);
 #endif
 
 
@@ -90,20 +77,20 @@ void _t0_start() {
 
 void _t0_stop() {
 #ifdef __CC3200R1M1RGC__
-    MAP_TimerDisable(TIMERA0_BASE, TIMER_BOTH);
+    Timer_IF_Stop(TIMERA0_BASE, TIMER_BOTH);
 #endif
     //          // clears all clock selects bits
 }
 
-void _t0_restart() {
+void _t0_reload() {
 #ifdef __CC3200R1M1RGC__
-	// Restart the timer, from the beginning of a new period.
-    MAP_TimerLoadSet(TIMERA0_BASE, TIMER_BOTH, _t0_ticks);
+    // Restart the timer, from the beginning of a new period.
+    Timer_IF_ReLoad(TIMERA0_BASE, TIMER_BOTH, _t0_us);
 #endif
 }
 
-hwt_callbacks TIMER0_CALLBACKS = {_t0_init, _t0_period, _t0_enable, _t0_disable, _t0_start, _t0_stop, _t0_restart};
+hwt_callbacks _t0_callbacks = {_t0_init, _t0_period, _t0_enable, _t0_disable, _t0_start, _t0_stop, _t0_reload};
 
-HardwareTimer Timer0(TIMER0_CALLBACKS);
+HardwareTimer Timer0(_t0_callbacks);
 
 #endif

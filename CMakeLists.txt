@@ -11,7 +11,7 @@ file(GLOB INC_FILES
     *.h)
 
 file(GLOB SRC_FILES
-    utility/*.cpp
+    utility/*.c*
     *.cpp)
 
 generate_energia_library(Oxino

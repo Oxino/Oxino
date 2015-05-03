@@ -6,5 +6,8 @@ add_subdirectory(Timers_Blink)
 add_subdirectory(LinkedList_ClassList)
 add_subdirectory(LinkedList_SimpleIntegerList)
 add_subdirectory(Button_LongPressed)
+add_subdirectory(SPWM_Simple)
+add_subdirectory(LED_Single)
+add_subdirectory(LED_RGB)
 
 add_subdirectory(Watchdog_Reboot)

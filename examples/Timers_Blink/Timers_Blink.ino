@@ -1,6 +1,7 @@
+#include "Arduino.h"
 #include <Oxino.h>
 
-HardwareTimer &Timer = Timer0; // Could be Timer1, Timer2 or Timer3
+HardwareTimer &Timer = Timer1; // Could be Timer1, Timer2 or Timer3
 
 // This example uses the timer interrupt to blink an LED
 // and also demonstrates how to share a variable between
@@ -9,9 +10,9 @@ HardwareTimer &Timer = Timer0; // Could be Timer1, Timer2 or Timer3
 #if defined(RGB_BUILTIN_R)
 const int led = RGB_BUILTIN_R;  // the pin with a LED
 #elif defined(__CC3200R1M1RGC__)
-const int led = RED_LED;
+const uint8_t led = RED_LED;
 #else
-const int led = LED_BUILTIN;
+const uint8_t led = LED_BUILTIN;
 #endif
 
 void setup(void) {
@@ -25,10 +26,13 @@ void setup(void) {
 uint8_t ledState = LOW;
 volatile unsigned long blinkCount = 0; // use volatile for shared variables
 
-void blinkLED(void) {
-	ledState = !ledState;
+void blinkLED(void *params) {
+	ledState ^= 1;
 	if (ledState) blinkCount = blinkCount + 1;  // increase when LED turns on
 	digitalWrite(led, ledState);
+    Serial.print(micros());
+    Serial.print(" Blink ");
+    Serial.println(ledState);
 	if (blinkCount > 10) Timer.detachInterrupt();
 }
 

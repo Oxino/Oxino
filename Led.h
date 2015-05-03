@@ -10,6 +10,12 @@
 
 #include <Arduino.h>
 
+#define USE_SPWM
+
+#ifdef USE_SPWM
+#include "SPWM.h"
+#endif
+
 //RGB Basic Colors
 #define RGB_COLOR_RED       0xFF0000
 #define RGB_COLOR_GREEN     0x00FF00
@@ -111,12 +117,11 @@ protected:
     void write(byte index, int value) {
         if (index >= NUM) return;
         uint8_t pin = _pins[index];
-        uint8_t timer = digitalPinToTimer(pin);
-        if (timer == NOT_ON_TIMER) {
-            digitalWrite(pin, value > 0 ? HIGH : LOW);
-        } else {
-            analogWrite(pin, value);
-        }
+        #ifdef USE_SPWM
+        SPWM.write(pin, (uint8_t) value);
+        #else
+        analogWrite(pin, value);
+        #endif
     }
 
     void setPins(byte *pins) {
@@ -132,9 +137,9 @@ protected:
 typedef CustomLED<1> LED_1;
 typedef CustomLED<3> LED_3;
 
-class SolidLED : public LED_1 {
+class SingleLED : public LED_1 {
 public:
-    SolidLED(byte pin, bool invert = false) : LED_1(invert) {
+    SingleLED(byte pin, bool invert = false) : LED_1(invert) {
         byte pins[] = {pin};
         setPins(pins);
     }

@@ -1,5 +1,5 @@
 #include "Oxino.h"
-#include "WiFi.h"
+
 ATOS atos; //create a new istance
 
 //variables to manage the LEDs
@@ -23,38 +23,8 @@ int flashLed2(void *params) {
     atos.sleep(250);
 }
 
-
-String _ID;
-
-String &GetUniqueID() {
-
-    if (_ID == NULL) {
-        _ID.reserve(12);
-
-        uint8_t buf[6];
-        // Using mac address as id
-        WiFi.macAddress(buf);
-
-        char hex_digit;
-        for (int i = 0; i < 6; ++i) {
-            hex_digit = (char) (48 + (buf[i] >> 4));
-            if (57 < hex_digit)
-                hex_digit += 39;
-            _ID += hex_digit;
-            hex_digit = (char) (48 + (buf[i] & 0xf));
-            if (57 < hex_digit)
-                hex_digit += 39;
-            _ID += hex_digit;
-        }
-    }
-
-    return _ID;
-
-}
-
 //setup routine
 void setup() {
-    GetUniqueID();
     atos.begin(); //initialize the scheduler
     //pins as output
     pinMode(LED1, OUTPUT);
@@ -66,4 +36,6 @@ void setup() {
 
 
 //main loop - it's empty
-void loop() {}
+void loop() {
+
+}

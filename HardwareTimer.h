@@ -22,14 +22,13 @@
 #define RESOLUTION_T8     256
 #define RESOLUTION_T16    65536
 
+#ifndef SYSCLK
 #ifdef F_CPU
-#define SYSCLOCK F_CPU     // main Arduino clock
+#define SYSCLK F_CPU     // main cpu clock
 #else
 #define SYSCLOCK 16000000  // main Arduino clock
-#endif
-
-#define MS_TO_TICKS(ms)         ((SYSCLOCK/1000) * (ms))
-#define US_TO_TICKS(us)         ((SYSCLOCK/1000000UL) * (us))
+#endif // F_CPU
+#endif // SYSCLK
 
 struct hwt_callbacks {
     void (*init)();
@@ -44,12 +43,12 @@ struct hwt_callbacks {
 
     void (*stop)();
 
-    void (*restart)();
+    void (*reload)();
 
 };
 
 
-typedef void (*ISRCallback)();
+typedef void (*ISRCallback)(void *params);
 
 class HardwareTimer {
 public:
@@ -58,23 +57,24 @@ public:
 
     void init(unsigned long us = 1000000);
 
-    void start();
+    void start(long us = 0);
 
     void stop();
 
-    void restart();
+    void attachInterrupt(ISRCallback isr, void *params = NULL);
 
-    void attachInterrupt(void (*isr)(), long us = -1);
+    void enable();
 
-    void detachInterrupt();
+    void disable();
 
-    long setPeriod(long us);
+    long reload(long us = 0);
 
     void isr();
 
 protected:
     hwt_callbacks &_callbacks;
     ISRCallback _isr;
+    void *_params;
 };
 
 #if defined(TIMERA0A)

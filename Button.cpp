@@ -55,7 +55,7 @@ void Button::begin(uint8_t pin, bool invert, bool internalPullup) {
  * read() returns the state of the button, 1==pressed, 0==released,     *
  * does debouncing, captures and maintains times, previous states, etc. *
  *----------------------------------------------------------------------*/
-uint8_t Button::read() {
+int Button::read() {
 	return update();
 }
 
@@ -63,7 +63,7 @@ uint8_t Button::read() {
  * read() returns the state of the button, 1==pressed, 0==released,     *
  * does debouncing, captures and maintains times, previous states, etc. *
  *----------------------------------------------------------------------*/
-uint8_t Button::update() {
+int Button::update() {
 	static uint32_t now;
 	static int curr;
 
@@ -123,12 +123,12 @@ void Button::reset() {
  * read, and return false (0) or true (!=0) accordingly.                *
  * These functions do not cause the button to be read.                  *
  *----------------------------------------------------------------------*/
-uint8_t Button::isPressed() {
-	return _state == 0 ? 0 : 1;
+bool Button::isPressed() {
+	return _state != 0;
 }
 
-uint8_t Button::isReleased() {
-	return _state == 0 ? 1 : 0;
+bool Button::isReleased() {
+	return _state == 0;
 }
 
 /*----------------------------------------------------------------------*
@@ -137,11 +137,11 @@ uint8_t Button::isReleased() {
  * true (!=0) accordingly.                                              *
  * These functions do not cause the button to be read.                  *
  *----------------------------------------------------------------------*/
-uint8_t Button::wasPressed() {
+bool Button::wasPressed() {
 	return _state && _changed;
 }
 
-uint8_t Button::wasReleased() {
+bool Button::wasReleased() {
 	return !_state && _changed;
 }
 
@@ -151,12 +151,12 @@ uint8_t Button::wasReleased() {
  * time in milliseconds. Returns false (0) or true (1) accordingly.     *
  * These functions do not cause the button to be read.                  *
  *----------------------------------------------------------------------*/
-uint8_t Button::pressedFor(uint32_t ms) {
-	return (_state == 1 && _time - _lastChange >= ms) ? 1 : 0;
+bool Button::pressedFor(uint32_t ms) {
+	return (_state == 1 && _time - _lastChange >= ms);
 }
 
-uint8_t Button::releasedFor(uint32_t ms) {
-	return (_state == 0 && _time - _lastChange >= ms) ? 1 : 0;
+bool Button::releasedFor(uint32_t ms) {
+	return (_state == 0 && _time - _lastChange >= ms);
 }
 
 /*----------------------------------------------------------------------*

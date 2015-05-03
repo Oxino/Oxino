@@ -9,21 +9,20 @@
 
 void HardwareTimer::init(unsigned long us) {
     _callbacks.init();
-    setPeriod(us);
+    reload(us);
 }
 
 
-long HardwareTimer::setPeriod(long us) {
-    long ret = _callbacks.period(us);
-    stop();
-    start();
-    return ret;
+long HardwareTimer::reload(long us) {
+    if (us > 0) {
+        _callbacks.period(us);
+    }
+    _callbacks.reload();
 }
 
-void HardwareTimer::attachInterrupt(void (*isr)(), long us) {
-    if (us > 0)
-        setPeriod(us);
+void HardwareTimer::attachInterrupt(ISRCallback isr, void *params) {
     _isr = isr;        // register the user's callback with the real ISR
+    _params = params;
     _callbacks.enable();    // sets the timer overflow interrupt enable bit
 #ifdef __CC3200R1M1RGC__
 #else
@@ -32,11 +31,18 @@ void HardwareTimer::attachInterrupt(void (*isr)(), long us) {
     start();
 }
 
-void HardwareTimer::detachInterrupt() {
+void HardwareTimer::enable() {
+    _callbacks.enable();
+}
+
+void HardwareTimer::disable() {
     _callbacks.disable();    // clears the timer overflow interrupt enable bit
 }
 
-void HardwareTimer::start() {
+void HardwareTimer::start(long us) {
+    if (us > 0) {
+        reload(us);
+    }
     _callbacks.start();
 }
 
@@ -44,13 +50,9 @@ void HardwareTimer::stop() {
     _callbacks.stop();          // clears all clock selects bits
 }
 
-void HardwareTimer::restart() {
-    _callbacks.restart();
-}
-
 
 void HardwareTimer::isr() {
     if (_isr) {
-        _isr();
+        _isr(_params);
     }
 }

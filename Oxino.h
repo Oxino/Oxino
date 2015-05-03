@@ -12,5 +12,8 @@
 #include "Timers.h"
 #include "Watchdog.h"
 #include "ATOS.h"
+#include "SPWM.h"
+
+#include "utility/timer_if.h"
 
 #endif //OXINO_H

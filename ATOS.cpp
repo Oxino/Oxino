@@ -9,6 +9,8 @@
 #ifdef __CC3200R1M1RGC__
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
+#include <WiFi/utility/device.h>
+
 #endif
 
 const uint8_t MAX_TASKS = 9; //max allowed g_tasks -1 (i.e.: 9 = 10-1)
@@ -26,30 +28,17 @@ void _reboot() {
 #ifdef __CC3200R1M1RGC__
     if (_timer) _timer->stop();
 
-    //
-    // Configure hibernate RTC wakeup
-    //
-    PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
-
-    //
-    // Delay loop
-    //
+    MAP_PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
     MAP_UtilsDelay(8000000);
-
-    //
-    // Set wake up time
-    //
-    PRCMHibernateIntervalSet(330);
-
-    //
-    // Request hibernate
-    //
-    PRCMHibernateEnter();
+    MAP_PRCMHibernateIntervalSet(330);
+    MAP_PRCMHibernateEnter();
 
     //
     // Control should never reach here
     //
-    while (1) {}
+    while (1);
+#else
+#error Unknown how to reboot
 #endif
 }
 
@@ -91,7 +80,7 @@ int TaskSemaphore::wait() {
 
 
 //ISR (Interrupt Service Routine)
-void isr() {
+void isr(void *params) {
     int i;
     int iRet;
 
@@ -137,7 +126,7 @@ void isr() {
 }
 
 void ATOS::begin(uint16_t timeout) {
-    begin(Timer3, timeout);
+    begin(Timer0, timeout);
 }
 
 void ATOS::begin(HardwareTimer &timer, uint16_t timeout) {
