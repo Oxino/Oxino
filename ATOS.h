@@ -1,17 +1,16 @@
 #ifndef TOS_H
 #define TOS_H
 
-#define ATOS_VERSION 001
+#define ATOS_VERSION (001)
 
 #include "Arduino.h"
-#include "Timers.h"
 
 #if !defined (__CC3200R1M1RGC__)
 #error Sorry, this MCU is only support CC3200 for now!
 #endif
 
-#define TOS_OK                 0
-#define TOS_ERROR              (-1)
+#define ATOS_OK                 0
+#define ATOS_ERROR              (-1)
 
 #define TASK_RET_INPROG         0
 #define TASK_RET_DONE           1
@@ -47,8 +46,6 @@ class ATOS {
 public:
     void begin(uint16_t timeout = 0);
 
-    void begin(HardwareTimer &timer, uint16_t timeout = 0);
-
     int createTask(P_TOS_TASK_FN fn);
 
     int createTask(P_TOS_TASK_FN fn, void *params);
@@ -61,7 +58,9 @@ public:
 
     int stop();
 
-    int start();
+    int enable();
+
+    int disable();
 
     void reset();
 

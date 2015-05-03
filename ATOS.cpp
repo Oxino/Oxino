@@ -10,12 +10,13 @@
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
 #include <WiFi/utility/device.h>
+#include <IntervalTimer.h>
 
 #endif
 
 const uint8_t MAX_TASKS = 9; //max allowed g_tasks -1 (i.e.: 9 = 10-1)
 
-static HardwareTimer *_timer = NULL;
+static IntervalTimer _timer;
 
 volatile uint16_t _timeout;
 static bool _initialized = false;
@@ -26,7 +27,7 @@ static uint16_t _num_task = 0;
 
 void _reboot() {
 #ifdef __CC3200R1M1RGC__
-    if (_timer) _timer->stop();
+    _timer.end();
 
     MAP_PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
     MAP_UtilsDelay(8000000);
@@ -65,13 +66,13 @@ int TaskSemaphore::wait() {
         //
         // Return success
         //
-        return TOS_OK;
+        return ATOS_OK;
     }
 
     //
     // Return error
     //
-    return TOS_ERROR;
+    return ATOS_ERROR;
 }
 
 
@@ -125,15 +126,10 @@ void isr(void *params) {
     }
 }
 
-void ATOS::begin(uint16_t timeout) {
-    begin(Timer0, timeout);
-}
 
-void ATOS::begin(HardwareTimer &timer, uint16_t timeout) {
+void ATOS::begin(uint16_t timeout) {
     _initialized = true;
-    _timer = &timer;
-    _timer->init(1000); // 1 ms
-    _timer->attachInterrupt(isr);
+    _timer.begin(isr, 1000);
     _timeout = timeout;
     if (_timeout > 1) {
         Watchdog.enable(timeout);
@@ -175,7 +171,7 @@ int ATOS::createTask(P_TOS_TASK_FN fn, void *params) {
 
 int ATOS::createTask(P_TOS_TASK_FN fn, const char *name, void *params) {
     if (!_initialized || _num_task >= MAX_TASKS) {
-        return TOS_ERROR;
+        return ATOS_ERROR;
     }
 
     //
@@ -195,10 +191,10 @@ int ATOS::createTask(P_TOS_TASK_FN fn, const char *name, void *params) {
         g_tasks[_num_task].planned = 0;
         _num_task++;
 
-        return TOS_OK;
+        return ATOS_OK;
     }
 
-    return TOS_OK;
+    return ATOS_OK;
 }
 
 void ATOS::sleep(unsigned long ms) {
@@ -207,16 +203,24 @@ void ATOS::sleep(unsigned long ms) {
 
 int ATOS::stop() {
     if (!_initialized) {
-        return TOS_ERROR;
+        return ATOS_ERROR;
     }
-    _timer->stop();
-    return TOS_OK;
+    _timer.end();
+    return ATOS_OK;
 }
 
-int ATOS::start() {
+int ATOS::enable() {
     if (!_initialized) {
-        return TOS_ERROR;
+        return ATOS_ERROR;
     }
-    _timer->start();
-    return TOS_OK;
+    _timer.enable();
+    return ATOS_OK;
+}
+
+int ATOS::disable() {
+    if (!_initialized) {
+        return ATOS_ERROR;
+    }
+    _timer.disable();
+    return ATOS_OK;
 }

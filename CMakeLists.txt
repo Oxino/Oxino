@@ -17,6 +17,6 @@ file(GLOB SRC_FILES
 generate_energia_library(Oxino
     HDRS ${INC_FILES}
     SRCS ${SRC_FILES}
-    BOARD lpcc3200)
+    BOARD witii_cc3200)
 
 add_subdirectory(examples)

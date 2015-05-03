@@ -5,8 +5,8 @@
 #ifndef SPWM_H
 #define SPWM_H
 
+#include <IntervalTimer.h>
 #include "Arduino.h"
-#include "HardwareTimer.h"
 
 #define __DEBUG_SPWM__
 
@@ -46,11 +46,7 @@ public:
         begin(500);
     }
 
-    void begin(long hertz, uint16_t range = 255) {
-        begin(Timer1, hertz, range);
-    }
-
-    void begin(HardwareTimer &timer, long hertz, uint16_t range = 255);
+    void begin(long hertz, uint16_t range = 255);
 
     void write(uint8_t pin, uint8_t value, bool invert = false);
 
@@ -66,7 +62,7 @@ protected:
     uint16_t _count;
     long _hertz;
     uint16_t _range;
-    HardwareTimer *_timer;
+    IntervalTimer _timer;
 
     void doWrite(uint8_t pin, bool state, bool invert);
 

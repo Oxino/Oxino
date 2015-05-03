@@ -17,16 +17,14 @@ SPWMClass::SPWMClass() {
     memset(_channels, 0, sizeof(_channels));
 }
 
-void SPWMClass::begin(HardwareTimer &timer, long hertz, uint16_t range) {
-    _timer = &timer;
+void SPWMClass::begin(long hertz, uint16_t range) {
     _hertz = hertz;
     _range = range;
     _count = 0;
     _num = 0;
     memset(_channels, 0, sizeof(_channels));
 
-    _timer->init((US_PER_SEC - (hertz * (_range + 1)) / 2) / (hertz * (_range + 1)));
-    _timer->attachInterrupt(spwm_isr, this);
+    _timer.begin(spwm_isr, this, (US_PER_SEC - (hertz * (_range + 1)) / 2) / (hertz * (_range + 1)));
 }
 
 void SPWMClass::write(uint8_t pin, uint8_t value, bool invert) {
@@ -38,7 +36,7 @@ void SPWMClass::write(uint8_t pin, uint8_t value, bool invert) {
         doWrite(pin, (uint8_t) (value > 0), false); // ignore invert
     }
 
-    if (_timer) _timer->disable();
+    _timer.disable();
     int idx = find(pin);
     if (out_of_range) {
         if (idx >= 0) removeIndex(idx);
@@ -53,7 +51,7 @@ void SPWMClass::write(uint8_t pin, uint8_t value, bool invert) {
             _channels[idx].invert = invert;
         }
     }
-    if (_timer) _timer->enable();
+    _timer.enable();
 }
 
 void SPWMClass::update() {
@@ -72,16 +70,16 @@ void SPWMClass::update() {
 
 void SPWMClass::printInterruptLoad(Print &printer) {
 #ifdef __DEBUG_SPWM__
-    if (!_timer) return;
+    if (!_timer.isActive()) return;
 
     unsigned long time1, time2;
 
-    _timer->enable(); // enable interrupt
+    _timer.enable(); // enable interrupt
     time1 = micros();
     delayMicroseconds(5000);
     time1 = micros() - time1;
 
-    _timer->disable(); // disable interrupt
+    _timer.disable(); // disable interrupt
     time2 = micros();
     delayMicroseconds(5000);
     time2 = micros() - time2;
@@ -104,7 +102,7 @@ void SPWMClass::printInterruptLoad(Print &printer) {
     printer.print(F("  Range: "));
     printer.println(_range + 1);
 
-    _timer->enable();
+    _timer.enable();
 #endif
 }
 
