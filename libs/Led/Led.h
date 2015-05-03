@@ -59,6 +59,8 @@ public:
 
     void brightness(byte value);
 
+    void interval(int newInterval);
+
 private:
     bool _invert;
     int _brightness;

@@ -142,6 +142,10 @@ void BaseLED::brightness(byte value) {
 	_brightness = value;
 }
 
+void BaseLED::interval(int newInterval) {
+	_interval = newInterval;
+}
+
 uint8_t BaseLED::scale(uint8_t value) {
 	return (uint8_t) ((((uint16_t) (value)) * _brightness / 255));
 }
