@@ -5,14 +5,10 @@
 #ifndef OXINO_H
 #define OXINO_H
 
-#include "Randify.h"
-#include "Led.h"
-#include "Button.h"
-#include "LinkedList.h"
-#include "Watchdog.h"
-#include "ATOS.h"
-#include "SPWM.h"
-
-#include "utility/timer_if.h"
+#include "libs/ATOS/ATOS.h"
+#include "libs/Button/Button.h"
+#include "libs/Led/Led.h"
+#include "libs/LinkedList/LinkedList.h"
+#include "libs/Randify/Randify.h"
 
 #endif //OXINO_H

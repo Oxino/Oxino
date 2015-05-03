@@ -1,11 +1,11 @@
-#include "Arduino.h"
-#include "Oxino.h"
+#include <Arduino.h>
 #include <driverlib/prcm.h>
+#include "Oxino.h"
 
 void setup() {
 
     Serial.begin(115200);
-    Serial.println("WDT BEGIN");
+    Serial.println("Watchdog begin");
     pinMode(RED_LED, OUTPUT);
     digitalWrite(RED_LED, LOW);
     delay(1000);
