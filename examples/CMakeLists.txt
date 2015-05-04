@@ -8,5 +8,7 @@ add_subdirectory(Button_LongPressed)
 add_subdirectory(LED_RGB)
 add_subdirectory(LED_Single)
 
+add_subdirectory(Timo_Expired)
+
 add_subdirectory(Watchdog_Reboot)
 

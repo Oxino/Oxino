@@ -10,6 +10,7 @@ file(GLOB INC_FILES
     libs/ATOS/*.h
     libs/Button/*.h
     libs/Led/*.h
+    libs/Timo/*.h
     libs/Randify/*.h
     libs/Watchdog/*.h
     *.h)
@@ -18,6 +19,7 @@ file(GLOB SRC_FILES
     libs/ATOS/*.c*
     libs/Button/*.c*
     libs/Led/*.c*
+    libs/Timo/*.c*
     libs/Randify/*.c*
     libs/Watchdog/*.c*
     *.c*)
