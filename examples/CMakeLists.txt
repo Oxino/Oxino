@@ -8,8 +8,5 @@ add_subdirectory(Button_LongPressed)
 add_subdirectory(LED_RGB)
 add_subdirectory(LED_Single)
 
-add_subdirectory(LinkedList_ClassList)
-add_subdirectory(LinkedList_SimpleIntegerList)
-
 add_subdirectory(Watchdog_Reboot)
 
