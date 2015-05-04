@@ -4,11 +4,12 @@
 
 #include "ATOS.h"
 #include "Watchdog.h"
+#include <IntervalTimer.h>
 
 #ifdef __CC3200R1M1RGC__
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
-#include <IntervalTimer.h>
+#include <WiFi/utility/device.h>
 
 #endif
 
@@ -27,15 +28,7 @@ void _reboot() {
 #ifdef __CC3200R1M1RGC__
     _timer.end();
 
-    MAP_PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
-    MAP_UtilsDelay(8000000);
-    MAP_PRCMHibernateIntervalSet(330);
-    MAP_PRCMHibernateEnter();
-
-    //
-    // Control should never reach here
-    //
-    while (1);
+    MAP_PRCMMCUReset(1);
 #else
 #error Unknown how to reboot
 #endif
