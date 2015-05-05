@@ -25,8 +25,6 @@ void loop() {
         Serial.println("\nConnected");
     }
 
-    WiFi.off();
-
     delay(2000);
     Serial.println("Reseting board");
     atos.reset();
