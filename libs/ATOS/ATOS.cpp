@@ -9,13 +9,13 @@
 #ifdef __CC3200R1M1RGC__
 #include <driverlib/prcm.h>
 #include <driverlib/utils.h>
-#include <WiFi/utility/device.h>
+#include <WiFi.h>
 
 #endif
 
 const uint8_t MAX_TASKS = 9; //max allowed g_tasks -1 (i.e.: 9 = 10-1)
 
-static IntervalTimer _timer;
+static IntervalTimer OST;
 
 volatile uint16_t _timeout;
 static bool _initialized = false;
@@ -26,7 +26,7 @@ static uint16_t _num_task = 0;
 
 void _reboot() {
 #ifdef __CC3200R1M1RGC__
-    _timer.end();
+    OST.end();
 
     MAP_PRCMMCUReset(1);
 #else
@@ -72,40 +72,16 @@ int TaskSemaphore::wait() {
 
 
 //ISR (Interrupt Service Routine)
-void isr(void *params) {
+void os_isr(void *params) {
     int i;
     int iRet;
 
-    //
-    // Loop through every task
-    //
     for (i = 0; i < _num_task; i++) {
-        //
-        // Set the current task pointer
-        //
         g_current_task = &g_tasks[i];
-
-        //
-        // Check if the task is active
-        //
         if (TASK_STATE_RUN == g_current_task->state) {
-            //
-            // Check if task is not in sleep
-            //
             if (g_current_task->planned < millis()) {
-
-                //
-                // Invoke the task function
-                //
                 iRet = g_current_task->fn(g_current_task->params);
-
-                //
-                // check the return value
-                //
                 if (TASK_RET_DONE == iRet) {
-                    //
-                    // Mark the task as done base on return value
-                    //
                     g_current_task->state = TASK_STATE_DONE;
                 }
             }
@@ -120,7 +96,7 @@ void isr(void *params) {
 
 void ATOS::begin(uint16_t timeout) {
     _initialized = true;
-    _timer.begin(isr, 1000);
+    OST.begin(os_isr, 1000);
     _timeout = timeout;
     if (_timeout > 1) {
         Watchdog.enable(timeout);
@@ -196,7 +172,7 @@ int ATOS::stop() {
     if (!_initialized) {
         return ATOS_ERROR;
     }
-    _timer.end();
+    OST.end();
     return ATOS_OK;
 }
 
@@ -204,7 +180,7 @@ int ATOS::enable() {
     if (!_initialized) {
         return ATOS_ERROR;
     }
-    _timer.enable();
+    OST.enable();
     return ATOS_OK;
 }
 
@@ -212,6 +188,6 @@ int ATOS::disable() {
     if (!_initialized) {
         return ATOS_ERROR;
     }
-    _timer.disable();
+    OST.disable();
     return ATOS_OK;
 }
