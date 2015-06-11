@@ -10,7 +10,7 @@
 #define NUM_LED_FADE_STEPS	100
 
 #if defined(LED_BUILTIN)
-SolidLED LED(LED_BUILTIN);
+SingleLED LED(LED_BUILTIN);
 #endif
 
 #if defined(RGB_BUILTIN_R) && defined(RGB_BUILTIN_G) && defined(RGB_BUILTIN_B)

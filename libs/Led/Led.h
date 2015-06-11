@@ -91,16 +91,15 @@ protected:
 template<size_t NUM = 1>
 class CustomLED : public BaseLED {
 public:
-    CustomLED(byte *pins, bool invert = false) : BaseLED(invert) {
+    CustomLED(int *pins, bool invert = false) : BaseLED(invert) {
         setPins(pins);
     }
 
-    CustomLED(bool invert = false) :
-            BaseLED(invert) {
+    CustomLED(bool invert = false) : BaseLED(invert) {
     }
 
 private:
-    byte _pins[NUM];
+    int _pins[NUM];
     byte _color[NUM];
     byte _current[NUM];
 protected:
@@ -118,7 +117,8 @@ protected:
 
     void write(byte index, int value) {
         if (index >= NUM) return;
-        uint8_t pin = _pins[index];
+        int pin = _pins[index];
+        if (pin < 0) return;
         #ifdef USE_SPWM
         SPWM.write(pin, (uint8_t) value);
         #else
@@ -126,10 +126,10 @@ protected:
         #endif
     }
 
-    void setPins(byte *pins) {
-        memcpy(_pins, pins, NUM);
+    void setPins(int *pins) {
+        memcpy(_pins, pins, NUM * sizeof(int));
         for (size_t i = 0; i < NUM; i++) {
-            pinMode(_pins[i], OUTPUT);
+            if (_pins[i] >= 0) pinMode((uint8_t) _pins[i], OUTPUT);
         }
         off();
         update(); // turns off current led
@@ -141,8 +141,8 @@ typedef CustomLED<3> LED_3;
 
 class SingleLED : public LED_1 {
 public:
-    SingleLED(byte pin, bool invert = false) : LED_1(invert) {
-        byte pins[] = {pin};
+    SingleLED(int pin, bool invert = false) : LED_1(invert) {
+        int pins[] = {pin};
         setPins(pins);
     }
 
@@ -150,8 +150,8 @@ public:
 
 class RGBLED : public LED_3 {
 public:
-    RGBLED(byte redPin, byte greenPin, byte bluePin, bool invert = false) : LED_3(invert) {
-        byte pins[] = {redPin, greenPin, bluePin};
+    RGBLED(int redPin, int greenPin, int bluePin, bool invert = false) : LED_3(invert) {
+        int pins[] = {redPin, greenPin, bluePin};
         setPins(pins);
     }
 
@@ -159,7 +159,7 @@ public:
 
 #if !defined(LED_ENABLED) && defined(LED_BUILTIN)
 #define LED_ENABLED
-extern SolidLED LED;
+extern SingleLED LED;
 #endif
 
 #if !defined(RGB_ENABLED) && defined(RGB_BUILTIN_R) && defined(RGB_BUILTIN_G) && defined(RGB_BUILTIN_B)
