@@ -10,7 +10,7 @@
 #define BLINK_INTERVAL 100 	//In the BLINK state, switch the LED every 100 milliseconds.
 
 #ifdef __CC3200R1M1RGC__
-const uint8_t BUTTON_PIN = PUSH1;
+const uint8_t BUTTON_PIN = PUSH2;
 const uint8_t LED_PIN = RED_LED;
 #else
 const uint8_t BUTTON_PIN = 2;

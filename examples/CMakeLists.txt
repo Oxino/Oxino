@@ -3,6 +3,7 @@ add_subdirectory(ATOS_SerialTask)
 add_subdirectory(ATOS_Reset)
 add_subdirectory(ATOS_ResetAfterTimeout)
 
+add_subdirectory(Button_Led)
 add_subdirectory(Button_LongPressed)
 
 add_subdirectory(LED_RGB)
