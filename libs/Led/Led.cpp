@@ -9,14 +9,6 @@
 
 #define NUM_LED_FADE_STEPS	100
 
-#if defined(LED_BUILTIN)
-SingleLED LED(LED_BUILTIN);
-#endif
-
-#if defined(RGB_BUILTIN_R) && defined(RGB_BUILTIN_G) && defined(RGB_BUILTIN_B)
-RGBLED RGB(RGB_BUILTIN_R, RGB_BUILTIN_G, RGB_BUILTIN_B, true);
-#endif
-
 BaseLED::BaseLED(bool invert) {
 	_invert = invert;
 	_time = millis();

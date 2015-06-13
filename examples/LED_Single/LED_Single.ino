@@ -2,7 +2,7 @@
 
 #ifdef __CC3200R1M1RGC__
 uint8_t LED_1_PIN = RED_LED;
-uint8_t LED_2_PIN = YELLOW_LED;
+uint8_t LED_2_PIN = BLUE_LED;
 #else
 uint8_t LED_1_PIN = 13;
 uint8_t LED_2_PIN = 20;

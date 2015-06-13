@@ -3,7 +3,7 @@
 ATOS atos;
 const byte LED1 = RED_LED;
 const byte LED2 = GREEN_LED;
-const byte LED3 = YELLOW_LED;
+const byte LED3 = BLUE_LED;
 
 byte status = 0;
 

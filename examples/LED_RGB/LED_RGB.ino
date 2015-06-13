@@ -1,5 +1,7 @@
 #include <Oxino.h>
 
+RGBLED RGB(RED_LED, GREEN_LED, BLUE_LED, true);
+
 void setup() {
     // !!! Important
     SPWM.begin();

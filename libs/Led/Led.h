@@ -157,14 +157,4 @@ public:
 
 };
 
-#if !defined(LED_ENABLED) && defined(LED_BUILTIN)
-#define LED_ENABLED
-extern SingleLED LED;
-#endif
-
-#if !defined(RGB_ENABLED) && defined(RGB_BUILTIN_R) && defined(RGB_BUILTIN_G) && defined(RGB_BUILTIN_B)
-#define RGB_ENABLED
-extern RGBLED RGB;
-#endif
-
 #endif /* LED_H */
